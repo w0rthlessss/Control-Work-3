@@ -1,7 +1,7 @@
 #pragma once
 #include "GetInfo.h"
 #include <vector>
-enum ComaprisonOptions{isGreater, isLesser};
+enum ComaparisonOptions{strict, nonStrict};
 
 class iSort
 {
@@ -14,11 +14,11 @@ public:
 	int GetPermutations();
 	void ShowComparisons();
 	int GetComparisons();
-	virtual bool Sort(vector<vector<int>>& matrix) = 0;
-	virtual void SortSubArray(vector<int> &arr) = 0;
+	virtual void Sort(vector<int> &arr) = 0;
 	virtual string GetName() = 0;
 	bool Compare(int x, int y, int mode);
 	void Permutate(vector <int>& arr, int pos1, int pos2);
 	bool IsSorted(vector<int>& arr);
+	bool SortMatrix(vector<vector<int>>& matrix);
 };
 

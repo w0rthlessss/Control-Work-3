@@ -129,7 +129,6 @@
   <ItemGroup>
     <ClInclude Include="GetInfo.h" />
     <ClInclude Include="iSort.h" />
-    <ClInclude Include="SortingClasses.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>

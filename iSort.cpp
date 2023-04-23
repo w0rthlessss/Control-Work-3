@@ -30,15 +30,8 @@ int iSort::GetComparisons()
 bool iSort::Compare(int x, int y, int mode)
 {
 	comparisons++;
-	switch (mode)
-	{
-	case ComaprisonOptions::isBigger:
-		return x > y;
-	case ComaprisonOptions::isSmaller:
-		return x<y;
-	default:
-		break;
-	}
+	if (mode == ComaparisonOptions::strict) return x >= y;
+	else return x > y;
 }
 
 void iSort::Permutate(vector<int>& a, int pos1, int pos2)
@@ -49,10 +42,23 @@ void iSort::Permutate(vector<int>& a, int pos1, int pos2)
 
 bool iSort::IsSorted(vector<int>& arr)
 {
+	if (arr.size() == 1) return true;
 	for (int i = 0; i < arr.size()-1; i++) {
-		if(abs(arr[i])<abs(arr[i+1])) return true;
+		if (!Compare(arr[i], arr[i + 1], ComaparisonOptions::strict)) return false;
 	}
-	return false;
+	return true;
+}
+
+bool iSort::SortMatrix(vector<vector<int>>& matrix)
+{
+	bool isSorted = true;
+	for (int i = 0; i < matrix.size(); i++) {
+		if (!IsSorted(matrix[i])) {
+			Sort(matrix[i]);
+			isSorted = false;
+		}
+	}
+	return isSorted;
 }
 
 
