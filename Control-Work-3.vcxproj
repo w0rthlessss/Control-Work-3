@@ -100,10 +100,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,14 +128,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DataInput.h" />
     <ClInclude Include="GetInfo.h" />
     <ClInclude Include="iSort.h" />
+    <ClInclude Include="OutputFunctions.h" />
+    <ClInclude Include="SortingMethods.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DataInput.cpp" />
     <ClCompile Include="GetInfo.cpp" />
     <ClCompile Include="iSort.cpp" />
-    <ClCompile Include="SortingClasses.cpp" />
+    <ClCompile Include="OutputFunctions.cpp" />
     <ClCompile Include="Start.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>

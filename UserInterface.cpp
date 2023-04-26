@@ -1,75 +1,113 @@
 #include "UserInterface.h"
-#include "Tasks.h"
-#include "DataInput.h"
-#include "ModuleTests.h"
+#include <set>
+
+void Continue()
+{
+	cout << "\nPress Enter key to continue...\n";
+	if (getchar()) {
+		system("cls");
+		Task();
+		Fio();
+	}
+}
 
 //чтение данных с консоли и работа с ними
-void WorkWithConsole(vector<Student>& students, int& actionBottom)
+void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom)
 {
-	ui numberOfStudents = 0;
-	actionBottom = 1;
-
-	ConsoleInput(students, numberOfStudents);
+	fstream fout;
+	vector<vector<int>> temporaryMatrix;
+	int actionBottom = 1;
+	if (isRandom) RandomInput(matrix);
+	else ConsoleInput(matrix);
+	bool ask = true;
 	while (actionBottom != BottomMenu::back) {
+		PrintMatrix(matrix, TopMenu::console, "Original", fout, ask);
+
+		if (isMatrixSorted(matrix)) {
+			cout << "\nMatrix is already sorted!\n\n";
+			break;
+		}
+
 		OptionsBottom();
 		actionBottom = GetInt(">>");
+		
+		
 		switch (actionBottom)
 		{
 		case BottomMenu::all:
-			Print(TopMenu::console, students, "All students we have data about:\n\n");
+			temporaryMatrix = matrix;
+			if (SaveResults("future sort results") == 'y') 
+				GetResults(TopMenu::file, SortWithAllMethods(temporaryMatrix, TopMenu::file, fout), fout, false);
+
+			else GetResults(TopMenu::console, SortWithAllMethods(temporaryMatrix, TopMenu::console, fout), fout, false);
+			fout.close();
+			actionBottom = BottomMenu::back;
+			Continue();
 			break;
-		case BottomMenu::university:
-			FilterByUniversity(TopMenu::console, numberOfStudents, students);
+
+		case BottomMenu::certain:
+			CertainSort(matrix, TopMenu::console, fout);
+			fout.close();
+			actionBottom = BottomMenu::back;
+			Continue();
 			break;
-		case BottomMenu::course:
-			FilterByCourse(TopMenu::console, numberOfStudents, students);
-			break;
-		case BottomMenu::group:
-			FilterByGroup(TopMenu::console, numberOfStudents, students);
-			break;
+
 		case BottomMenu::back:
 			system("cls");
+			Task();
 			Fio();
 			break;
 		default:
 			IncorrectOption();
 			break;
 		}
+		ask = false;
 	}
 }
 
 //чтение данных из файла и работа с ними
-void WorkWithFile(vector<Student>& students, int& actionBottom)
+void WorkWithFile(vector<vector<int>>& matrix)
 {
-	ui numberOfStudents = 0;
-	fstream docIn, docOut;
+	vector<vector<int>> temporaryMatrix;
+	int actionBottom = 1;
+	fstream fin;
+	fstream fout;
 	bool isCorrect = false;
 	do {
-		string inputName = OpenFile(WorkWithFiles::input, docIn);
-		isCorrect = FileInput(students, docIn, numberOfStudents, inputName);
-		docIn.close();
-	} while (isCorrect == false);
+		string name = OpenFile(WorkWithFiles::input, fin);
+		isCorrect = FileInput(matrix, fin);
+		fin.close();
+	} while (!isCorrect);
 
-	while (actionBottom != BottomMenu::back) {
+	while (actionBottom != back) {
+		PrintMatrix(matrix, TopMenu::file, "Original", fout, false);
+		if (isMatrixSorted(matrix)) {
+			cout << "\nMatrix is already sorted!\n\n";
+			break;
+		}
 		OptionsBottom();
 		actionBottom = GetInt(">>");
-
+		
 		switch (actionBottom)
 		{
 		case BottomMenu::all:
-			Print(TopMenu::file, students, "All students we have data about:\n\n");
+			temporaryMatrix = matrix;
+			GetResults(TopMenu::file, SortWithAllMethods(temporaryMatrix, TopMenu::file, fout), fout, false);
+			fout.close();
+			actionBottom = BottomMenu::back;
+			Continue();
 			break;
-		case BottomMenu::university:
-			FilterByUniversity(TopMenu::file, numberOfStudents, students);
+
+		case BottomMenu::certain:
+			CertainSort(matrix, TopMenu::file, fout);
+			fout.close();
+			actionBottom = BottomMenu::back;
+			Continue();
 			break;
-		case BottomMenu::course:
-			FilterByCourse(TopMenu::file, numberOfStudents, students);
-			break;
-		case BottomMenu::group:
-			FilterByGroup(TopMenu::file, numberOfStudents, students);
-			break;
+
 		case BottomMenu::back:
 			system("cls");
+			Task();
 			Fio();
 			break;
 		default:
@@ -79,15 +117,107 @@ void WorkWithFile(vector<Student>& students, int& actionBottom)
 	}
 }
 
+
+void CertainSort(vector<vector<int>>& matrix, int mode, fstream &fout)
+{
+	vector<vector<int>> temporaryMatrix = matrix;
+	vector<pair<string, pair<int, int>>> res;
+	int actionSubBottom = 1;
+	set<int> used;
+	bool isOnly = true;
+	while (actionSubBottom != SubBottomMenu::backToBottom && actionSubBottom != SubBottomMenu::compare) {
+		SubOptionsBottom();
+		actionSubBottom = GetInt(">>");
+		switch (actionSubBottom)
+		{
+		case SubBottomMenu::bubble:
+			temporaryMatrix = matrix;
+			if (used.find(actionSubBottom) != used.end()) {
+				cout << "You have already used this sorting method!\n";
+				break;
+			}
+			res.push_back(SortWithCertainMethod<BubbleSort>(temporaryMatrix, mode, fout, isOnly));
+			used.insert(actionSubBottom);
+			break;
+
+		case SubBottomMenu::selection:
+			temporaryMatrix = matrix;
+			if (used.find(actionSubBottom) != used.end()) {
+				cout << "You have already used this sorting method!\n";
+				break;
+			}
+			res.push_back(SortWithCertainMethod<SelectionSort>(temporaryMatrix, mode, fout, isOnly));
+			used.insert(actionSubBottom);
+			break;
+
+		case SubBottomMenu::insertion:
+			temporaryMatrix = matrix;
+			if (used.find(actionSubBottom) != used.end()) {
+				cout << "You have already used this sorting method!\n";
+				break;
+			}
+			res.push_back(SortWithCertainMethod<InsertionSort>(temporaryMatrix, mode, fout, isOnly));
+			used.insert(actionSubBottom);
+			break;
+
+		case SubBottomMenu::shell:
+			temporaryMatrix = matrix;
+			if (used.find(actionSubBottom) != used.end()) {
+				cout << "You have already used this sorting method!\n";
+				break;
+			}
+			res.push_back(SortWithCertainMethod<ShellSort>(temporaryMatrix, mode, fout, isOnly));
+			used.insert(actionSubBottom);
+			break;
+
+		case SubBottomMenu::quick:
+			temporaryMatrix = matrix;
+			if (used.find(actionSubBottom) != used.end()) {
+				cout << "You have already used this sorting method!\n\n";
+				break;
+			}
+			res.push_back(SortWithCertainMethod<QuickSort>(temporaryMatrix, mode, fout, isOnly));
+			used.insert(actionSubBottom);
+			break;
+
+		case SubBottomMenu::compare:
+			GetResults(mode, res, fout, isOnly);
+			res.clear();
+			used.clear();
+			break;
+
+		case SubBottomMenu::backToBottom:
+			system("cls");
+			Task();
+			Fio();
+			break;
+
+		default:
+			IncorrectOption();
+			break;
+		}
+	}
+}
+
+
+void Task()
+{
+	cout << "Make a program for sorting data using methods of: \"Bubble Sort\", \"Selection Sort\", \"Insertion Sort\", \"Shell Sort\" and \"Quick Sort\".\n";
+	cout << "Print unsorted matrix (once) and sorted matrixes (for each method). And create a comparison table.\n";
+	cout << "Matrix must be sorted in ascending absoulute values in each line\n";
+	cout << "Matrix may be filled from console, file or using random values.\n";
+	cout << "Create abstract class \"iSort\" containing pure virtual method Sort, wich will be inherited by subclasses of sorting methods.\n\n";
+}
+
 void Fio()
 {
-	cout << "Control work #2\nEfremov Ivan Andreevich\nGroup #423\nVariant #8\n\n";
+	cout << "Control work #3\nEfremov Ivan Andreevich\nGroup #423\nVariant #8\n\n";
 }
 
 //меню верхнего уровня
 void OptionsTop()
 {
-	cout << "1 - Console input\n2 - File input\n3 - Run module tests\n4 - Exit\n\n";
+	cout << "\n1 - Console input\n2 - File input\n3 - Random input\n4 - Run module tests\n5 - Exit\n\n";
 }
 
 void InputOption(int option)
@@ -103,11 +233,20 @@ void InputOption(int option)
 //меню нижнего уровня
 void OptionsBottom()
 {
-	cout << "\n\n1 - List of all students\n";
-	cout << "2 - Filter students by university\n";
-	cout << "3 - Filter students by course\n";
-	cout << "4 - Filter students by group\n";
-	cout << "5 - Back\n\n";
+	cout << "\n\n1 - Sort with all methods\n";
+	cout << "2 - Sort with certain methods\n";
+	cout << "3 - Back\n\n";
+}
+
+void SubOptionsBottom()
+{
+	cout << "\n\n1 - Bubble Sort\n";
+	cout << "2 - Selection Sort\n";
+	cout << "3 - Insertion Sort\n";
+	cout << "4 - Shell Sort\n";
+	cout << "5 - Quick Sort\n";
+	cout << "6 - Compare\n";
+	cout << "7 - Back\n\n";
 }
 
 void IncorrectOption()
@@ -115,87 +254,44 @@ void IncorrectOption()
 	cout << "\nThere is no such option in menu!\n\n";
 }
 
-//предложить пользователю сохранить результаты работы программы в файл
-char SaveResults(fstream& fout)
-{
-	string name;
-
-	cout << "Do you want to save results in the file? (y/n)\n\n";
-	char res = 'n';
-	do {
-		res = GetChar(">>");
-		if (res != 'y' && res != 'n') {
-			cout << "Incorrect input. Type 'y' or 'n' only!\n\n";
-		}
-	} while (res != 'y' && res != 'n');
-	if (res == 'y') {
-		name = OpenFile(WorkWithFiles::output, fout);
-	}
-
-	return res;
+template<class algorithm>
+pair<string, pair<int, int>> SortWithCertainMethod(vector<vector<int>>& matrix, int mode, fstream& fout, bool isOnly) {
+	algorithm sort;
+	PrintMatrix(matrix, mode, sort.GetName() + "ed", fout, isOnly);
+	return make_pair(sort.GetName(), make_pair(sort.GetComparisons(), sort.GetPermutations()));
 }
 
-//открытие файла для чтения или записи
-string OpenFile(int option, fstream& file)
-{
-	string name = "";
-	if (option == WorkWithFiles::input) {
-		do {
-			name = GetLink("\nEnter the name of file with data. Example: students.txt\n");
-			file.open(name, ios::in);
-			if (!file.is_open()) {
-				cout << "\nError opening file. Make sure, that file exists!\n";
-			}
+vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& matrix, int mode, fstream& fout) {
+	vector<pair<string, pair<int, int>>> a;
+	vector<vector<int>> tmpMatrix;
 
-		} while (!file.is_open());
-		return name;
-
+	if (mode == TopMenu::file && !fout.is_open()) {
+		string name = OpenFile(WorkWithFiles::output, fout);
 	}
-	else {
-		do {
-			name = GetLink("\nEnter the name of file where results will be stored.\nIf there is data in the file it will be overwritten.\nExample: filtered.txt\n");
 
-			file.open(name, ios::out, ios::trunc);
+	tmpMatrix = matrix;
+	a.push_back(SortWithCertainMethod<BubbleSort>(tmpMatrix, mode, fout, false));
 
-		} while (!file.is_open());
-		return name;
-	}
+	tmpMatrix = matrix;
+	a.push_back(SortWithCertainMethod<SelectionSort>(tmpMatrix, mode, fout, false));
+
+	tmpMatrix = matrix;
+	a.push_back(SortWithCertainMethod<InsertionSort>(tmpMatrix, mode, fout, false));
+
+	tmpMatrix = matrix;
+	a.push_back(SortWithCertainMethod<ShellSort>(tmpMatrix, mode, fout, false));
+
+	tmpMatrix = matrix;
+	a.push_back(SortWithCertainMethod<QuickSort>(tmpMatrix, mode, fout, false));
+
+	return a;
 }
 
-//основная структура программы
-void StartProgram()
-{
-	vector <Student> students;
-	int actionTop = 1, actionBottom = 1;
-	Fio();
-	while (actionTop) {
-		OptionsTop();
-		actionTop = GetInt(">>");
-		InputOption(actionTop);
-		switch (actionTop)
-		{
-		case TopMenu::console:
-
-			WorkWithConsole(students, actionBottom);
-			break;
-
-		case TopMenu::file:
-			WorkWithFile(students, actionBottom);
-			break;
-
-		case TopMenu::module:
-			LaunchAllTests();
-			break;
-
-		case TopMenu::quit:
-			cout << "\nProgramm finished it's work!\n";
-			exit(EXIT_SUCCESS);
-
-		default:
-
-			IncorrectOption();
-			break;
-
-		}
+bool isMatrixSorted(vector<vector<int>>& matrix) {
+	BubbleSort tmp;
+	bool isSorted = true;
+	for (int i = 0; i < static_cast<int>(matrix.size()); i++) {
+		if (!tmp.IsSorted(matrix[i])) return false;
 	}
+	return isSorted;
 }

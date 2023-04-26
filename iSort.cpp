@@ -6,21 +6,11 @@ iSort::iSort()
 	permutations = 0;
 }
 
-
-void iSort::ShowPermutations()
-{
-	cout << "Permutations: " << permutations << endl;
-}
-
 int iSort::GetPermutations()
 {
 	return permutations;
 }
 
-void iSort::ShowComparisons()
-{
-	cout << "Comparisons: " << comparisons << endl;
-}
 
 int iSort::GetComparisons()
 {
@@ -44,7 +34,7 @@ bool iSort::IsSorted(vector<int>& arr)
 {
 	if (arr.size() == 1) return true;
 	for (int i = 0; i < arr.size()-1; i++) {
-		if (!Compare(arr[i], arr[i + 1], ComaparisonOptions::strict)) return false;
+		if (abs(arr[i]) < abs(arr[i + 1])) return false;
 	}
 	return true;
 }
@@ -52,7 +42,7 @@ bool iSort::IsSorted(vector<int>& arr)
 bool iSort::SortMatrix(vector<vector<int>>& matrix)
 {
 	bool isSorted = true;
-	for (int i = 0; i < matrix.size(); i++) {
+	for (int i = 0; i < static_cast<int>(matrix.size()); i++) {
 		if (!IsSorted(matrix[i])) {
 			Sort(matrix[i]);
 			isSorted = false;

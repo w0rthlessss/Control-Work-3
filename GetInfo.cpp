@@ -18,12 +18,12 @@ int GetInt(string s) {
 			cout << "\nUse correct values!\n\n";
 			cout << s;
 		}
-		else if (tmp <= 0) {
+		/*else if (tmp <= 0) {
 			cout << "\nValue must be >0\n\n";
 			cin.clear();
 			IgnoreLine();
 			cout << s;
-		}
+		}*/
 		else {
 			IgnoreLine();
 			return tmp;
@@ -94,7 +94,7 @@ char GetChar(string s)
 	char tmp = '\n';
 	cout << s;
 	while (true) {
-		tmp = getchar();
+		cin >> tmp;
 		if (tmp == '\n') {
 			cout << "You must type y or n!\n\n";
 			cout << s;

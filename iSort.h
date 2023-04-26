@@ -1,6 +1,7 @@
 #pragma once
 #include "GetInfo.h"
 #include <vector>
+
 enum ComaparisonOptions{strict, nonStrict};
 
 class iSort
@@ -9,10 +10,9 @@ protected:
 	int comparisons=0;
 	int permutations=0;
 public:
+	virtual ~iSort() = default;
 	iSort();
-	void ShowPermutations();
 	int GetPermutations();
-	void ShowComparisons();
 	int GetComparisons();
 	virtual void Sort(vector<int> &arr) = 0;
 	virtual string GetName() = 0;

@@ -1,15 +1,17 @@
 #pragma once
-#include "Student.h"
-#include <fstream>
-#include <vector>
+#include "SortingMethods.h"
+#include "DataInput.h"
+#include "OutputFunctions.h"
 
-enum WorkWithFiles { input, output };
-enum TopMenu { console = 1, file, module, quit };
-enum BottomMenu { all = 1, university, course, group, back };
+void Continue();
 
-void WorkWithConsole(vector<Student>& students, int& actionBottom);
+void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom);
 
-void WorkWithFile(vector<Student>& students, int& actionBottom);
+void WorkWithFile(vector<vector<int>>& matrix);
+
+void CertainSort(vector<vector<int>>& matrix, int mode, fstream &fout);
+
+void Task();
 
 void Fio();
 
@@ -19,10 +21,13 @@ void InputOption(int option);
 
 void OptionsBottom();
 
+void SubOptionsBottom();
+
 void IncorrectOption();
 
-char SaveResults(fstream& fout);
+template<class algorithm>
+pair<string, pair<int, int>> SortWithCertainMethod(vector<vector<int>>& matrix, int mode, fstream& fout, bool isOnly);
 
-string OpenFile(int option, fstream& file);
+vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& matrix, int mode, fstream& fout);
 
-void StartProgram();
+bool isMatrixSorted(vector<vector<int>>& matrix);
