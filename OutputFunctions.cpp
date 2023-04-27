@@ -1,5 +1,6 @@
 #include "OutputFunctions.h"
 
+//вывод таблицы сравнения
 void GetResults(int mode, vector<pair<string, pair<int, int>>> results, fstream &fout, bool ask) {
 	if (results.empty()) {
 		cout << "\nThere isn't anything to comare!\n\n";
@@ -28,6 +29,7 @@ void GetResults(int mode, vector<pair<string, pair<int, int>>> results, fstream 
 
 }
 
+//вывод исходной либо отсортированной матрицы
 void PrintMatrix(vector<vector<int>>& matrix, int mode, string msg, fstream &fout, bool ask)
 {
 	cout << endl << msg << " matrix:\n\n";
@@ -56,6 +58,7 @@ void PrintMatrix(vector<vector<int>>& matrix, int mode, string msg, fstream &fou
 
 }
 
+//предложить пользователю сохранить результат в файл
 char SaveResults(string msg)
 {
 	cout << "Do you want to save " << msg << " in the file ? (y / n)\n\n";
@@ -70,6 +73,7 @@ char SaveResults(string msg)
 	return res;
 }
 
+//сохранить данные матрицы в файл
 void SaveConsoleData(fstream& fout, vector<vector<int>> matrix)
 {
 	string name = OpenFile(WorkWithFiles::output, fout);
@@ -90,7 +94,7 @@ string OpenFile(int option, fstream& file)
 	error_code ec;
 	if (option == WorkWithFiles::input) {
 		do {
-			name = GetLink("\nEnter the name of file with data.\nExample: students.txt\n");
+			name = GetLink("\nEnter the name of file with data.\nExample: matrix.txt\n");
 			file.open(name, ios::in);
 			if (!file.is_open()) {
 				cout << "\nError opening file. Make sure, that file exists!\n";

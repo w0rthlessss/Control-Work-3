@@ -1,22 +1,25 @@
 #include "iSort.h"
 
+//конструктор по умолчанию
 iSort::iSort()
 {
 	comparisons = 0;
 	permutations = 0;
 }
 
+//получить количество перестановок
 int iSort::GetPermutations()
 {
 	return permutations;
 }
 
-
+//получить количество сравнений
 int iSort::GetComparisons()
 {
 	return comparisons;
 }
 
+//функция для сравнения двух значений
 bool iSort::Compare(int x, int y, int mode)
 {
 	comparisons++;
@@ -24,12 +27,14 @@ bool iSort::Compare(int x, int y, int mode)
 	else return x > y;
 }
 
+//функция для перестановки двух элементов в векторе
 void iSort::Permutate(vector<int>& a, int pos1, int pos2)
 {
 	permutations++;
 	swap(a[pos1], a[pos2]);
 }
 
+//проверка на отсортированность строки матрицы
 bool iSort::IsSorted(vector<int>& arr)
 {
 	if (arr.size() == 1) return true;
@@ -39,6 +44,7 @@ bool iSort::IsSorted(vector<int>& arr)
 	return true;
 }
 
+//отсортировать все строки матрицы
 bool iSort::SortMatrix(vector<vector<int>>& matrix)
 {
 	bool isSorted = true;
