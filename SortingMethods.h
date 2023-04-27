@@ -1,7 +1,7 @@
 #pragma once
 #include "iSort.h"
-//#include "OutputFunctions.h"
 
+//сортировка пузырьком
 class BubbleSort : public iSort
 {
 public:
@@ -19,7 +19,7 @@ public:
 	}
 };
 
-
+//сортировка выбором
 class SelectionSort : public iSort
 {
 public:
@@ -50,7 +50,7 @@ public:
 	}
 };
 
-
+//сортировка вставками
 class InsertionSort : public iSort
 {
 public:
@@ -70,7 +70,7 @@ public:
 	}
 };
 
-
+//сортировка шелла
 class ShellSort : public iSort
 {
 public:
@@ -95,7 +95,7 @@ public:
 	}
 };
 
-
+//быстрая сортировка
 class QuickSort : public iSort
 {
 public:
@@ -147,13 +147,3 @@ public:
 
 
 };
-
-
-
-
-
-
-
-
-
-

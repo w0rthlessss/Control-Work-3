@@ -1,6 +1,7 @@
 #include "DataInput.h"
 #include "UserInterface.h"
 
+//вывод на консоль текущей матрицы (по ходу ее заполнения)
 void PrintCurrentMatrix(vector<vector<int>>& m, int curH, int curW, int totalW)
 {
 	int i = 0;
@@ -21,6 +22,7 @@ void PrintCurrentMatrix(vector<vector<int>>& m, int curH, int curW, int totalW)
 	} while (i <= curH);
 }
 
+//ввод матрицы с консоли
 void ConsoleInput(vector<vector<int>>& matrix)
 {
 	fstream fout;
@@ -53,6 +55,7 @@ void ConsoleInput(vector<vector<int>>& matrix)
 	Task();
 	Fio();
 	InputOption(TopMenu::console);
+	cout << "Matrix " << h << "x" << w << endl << endl;
 	PrintCurrentMatrix(matrix, h - 1, w, w);
 	cout << endl << endl;
 
@@ -62,16 +65,24 @@ void ConsoleInput(vector<vector<int>>& matrix)
 		
 }
 
-bool FileInput(vector<vector<int>>& matrix, fstream &fin)
+//ввод матрицы с файла
+bool FileInput(vector<vector<int>>& matrix, fstream &fin, bool isForTest)
 {
 	int matrixH = 0, matrixW = 0, tmp=0;
-
-	if (!fin >> matrixH) {
-		cout << "Error! Invalid data in the file! Check height value!\n";
+	fin >> matrixH;
+	if (fin.fail()) {
+		cout << "\nError! Invalid data in the file! Check height value!\n";
 		return false;
 	}
-	if (!fin >> matrixW) {
-		cout << "Error! Invalid data in the file! Check width value!\n";
+
+	fin >> matrixW;
+	if (fin.fail()) {
+		cout << "\nError! Invalid data in the file! Check width value!\n";
+		return false;
+	}
+
+	if (matrixH <= 0 || matrixW <= 0) {
+		cout << "\nError! Matrix dimensions could not be lesser than 1!\n";
 		return false;
 	}
 
@@ -79,7 +90,8 @@ bool FileInput(vector<vector<int>>& matrix, fstream &fin)
 
 	for (auto i = 0; i < matrixH; i++) {
 		for (auto j = 0; j < matrixW; j++) {
-			if (!fin >> tmp) {
+			fin >> tmp;
+			if (fin.fail()) {
 				cout << "Error! Invalid data in the file! Check matrix values!\n";
 				matrix.clear();
 				return false;
@@ -88,16 +100,20 @@ bool FileInput(vector<vector<int>>& matrix, fstream &fin)
 		}
 	}
 
-	system("cls");
-	Task();
-	Fio();
-	InputOption(TopMenu::console);
-	PrintCurrentMatrix(matrix, matrixH, matrixW, matrixW);
+	if (!isForTest) {
+		system("cls");
+		Task();
+		Fio();
+		InputOption(TopMenu::file);
+	}
+	
+	//PrintCurrentMatrix(matrix, matrixH-1, matrixW, matrixW);
 
 	fin.close();
 	return true;
 }
 
+//рандомное заполнение матрицы
 void RandomInput(vector<vector<int>>& matrix)
 {
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -128,6 +144,7 @@ void RandomInput(vector<vector<int>>& matrix)
 	Task();
 	Fio();
 	InputOption(TopMenu::console);
+	cout << "Matrix " << h << "x" << w << endl << endl;
 	PrintCurrentMatrix(matrix, h-1, w, w);
 	cout << endl << endl;
 	if (SaveResults("matrix data")=='y') {

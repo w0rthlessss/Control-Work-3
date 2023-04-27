@@ -131,6 +131,7 @@
     <ClInclude Include="DataInput.h" />
     <ClInclude Include="GetInfo.h" />
     <ClInclude Include="iSort.h" />
+    <ClInclude Include="ModuleTests.h" />
     <ClInclude Include="OutputFunctions.h" />
     <ClInclude Include="SortingMethods.h" />
     <ClInclude Include="UserInterface.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="DataInput.cpp" />
     <ClCompile Include="GetInfo.cpp" />
     <ClCompile Include="iSort.cpp" />
+    <ClCompile Include="ModuleTests.cpp" />
     <ClCompile Include="OutputFunctions.cpp" />
     <ClCompile Include="Start.cpp" />
     <ClCompile Include="UserInterface.cpp" />

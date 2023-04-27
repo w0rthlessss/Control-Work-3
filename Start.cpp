@@ -1,4 +1,5 @@
 #include "UserInterface.h"
+#include "ModuleTests.h"
 int main() {
 	vector<vector<int>> matrix;
 	int actionTop = 1;
@@ -20,7 +21,7 @@ int main() {
 			WorkWithFile(matrix);
 			break;
 		case TopMenu::module:
-			//LaunchAllTests();
+			LaunchAllTests();
 			break;
 		case TopMenu::quit:
 			cout << "Program finished its work!\n";

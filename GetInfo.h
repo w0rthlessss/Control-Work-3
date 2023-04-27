@@ -13,7 +13,7 @@ enum SubBottomMenu { bubble = 1, selection, insertion, shell, quick, compare, ba
 
 using namespace std;
 
-
+void IgnoreLine();
 int GetInt(string s);
 string GetString(string s, int i);
 string GetLink(string s);

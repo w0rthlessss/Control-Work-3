@@ -1,14 +1,17 @@
 #include "UserInterface.h"
 #include <set>
+#include "GetInfo.h"
 
+//функция очищающая консоль для повторной работы программы
 void Continue()
 {
 	cout << "\nPress Enter key to continue...\n";
-	if (getchar()) {
-		system("cls");
-		Task();
-		Fio();
+	if (getchar()!='\n') {
+		IgnoreLine();
 	}
+	system("cls");
+	Task();
+	Fio();
 }
 
 //чтение данных с консоли и работа с ними
@@ -23,7 +26,7 @@ void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom)
 	while (actionBottom != BottomMenu::back) {
 		PrintMatrix(matrix, TopMenu::console, "Original", fout, ask);
 
-		if (isMatrixSorted(matrix)) {
+		if (IsMatrixSorted(matrix)) {
 			cout << "\nMatrix is already sorted!\n\n";
 			break;
 		}
@@ -75,13 +78,13 @@ void WorkWithFile(vector<vector<int>>& matrix)
 	bool isCorrect = false;
 	do {
 		string name = OpenFile(WorkWithFiles::input, fin);
-		isCorrect = FileInput(matrix, fin);
+		isCorrect = FileInput(matrix, fin, false);
 		fin.close();
 	} while (!isCorrect);
 
 	while (actionBottom != back) {
 		PrintMatrix(matrix, TopMenu::file, "Original", fout, false);
-		if (isMatrixSorted(matrix)) {
+		if (IsMatrixSorted(matrix)) {
 			cout << "\nMatrix is already sorted!\n\n";
 			break;
 		}
@@ -117,7 +120,7 @@ void WorkWithFile(vector<vector<int>>& matrix)
 	}
 }
 
-
+//выбор метода сортировки
 void CertainSort(vector<vector<int>>& matrix, int mode, fstream &fout)
 {
 	vector<vector<int>> temporaryMatrix = matrix;
@@ -199,16 +202,17 @@ void CertainSort(vector<vector<int>>& matrix, int mode, fstream &fout)
 	}
 }
 
-
+//формулировка задания
 void Task()
 {
 	cout << "Make a program for sorting data using methods of: \"Bubble Sort\", \"Selection Sort\", \"Insertion Sort\", \"Shell Sort\" and \"Quick Sort\".\n";
 	cout << "Print unsorted matrix (once) and sorted matrixes (for each method). And create a comparison table.\n";
-	cout << "Matrix must be sorted in ascending absoulute values in each line\n";
+	cout << "Matrix must be sorted in descending absoulute values in each line\n";
 	cout << "Matrix may be filled from console, file or using random values.\n";
 	cout << "Create abstract class \"iSort\" containing pure virtual method Sort, wich will be inherited by subclasses of sorting methods.\n\n";
 }
 
+//вывод данных о выполнившем
 void Fio()
 {
 	cout << "Control work #3\nEfremov Ivan Andreevich\nGroup #423\nVariant #8\n\n";
@@ -220,6 +224,7 @@ void OptionsTop()
 	cout << "\n1 - Console input\n2 - File input\n3 - Random input\n4 - Run module tests\n5 - Exit\n\n";
 }
 
+//вывод метода заполнения матрицы
 void InputOption(int option)
 {
 	if (option == TopMenu::console) {
@@ -227,6 +232,9 @@ void InputOption(int option)
 	}
 	else if (option == TopMenu::file) {
 		cout << "\n<<File Input>>\n\n";
+	}
+	else if(option == TopMenu::random){
+		cout << "\n<<Random Input>>\n\n";
 	}
 }
 
@@ -238,6 +246,7 @@ void OptionsBottom()
 	cout << "3 - Back\n\n";
 }
 
+//меню с алгоритмами сортировки
 void SubOptionsBottom()
 {
 	cout << "\n\n1 - Bubble Sort\n";
@@ -249,11 +258,13 @@ void SubOptionsBottom()
 	cout << "7 - Back\n\n";
 }
 
+//пользователь выбрал несуществующий пункт меню
 void IncorrectOption()
 {
 	cout << "\nThere is no such option in menu!\n\n";
 }
 
+//использовать определённую сортировку
 template<class algorithm>
 pair<string, pair<int, int>> SortWithCertainMethod(vector<vector<int>>& matrix, int mode, fstream& fout, bool isOnly) {
 	algorithm sort;
@@ -261,6 +272,7 @@ pair<string, pair<int, int>> SortWithCertainMethod(vector<vector<int>>& matrix, 
 	return make_pair(sort.GetName(), make_pair(sort.GetComparisons(), sort.GetPermutations()));
 }
 
+//использовать все сортировки
 vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& matrix, int mode, fstream& fout) {
 	vector<pair<string, pair<int, int>>> a;
 	vector<vector<int>> tmpMatrix;
@@ -287,7 +299,8 @@ vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& mat
 	return a;
 }
 
-bool isMatrixSorted(vector<vector<int>>& matrix) {
+//проверка на отсортированность матрицы
+bool IsMatrixSorted(vector<vector<int>>& matrix) {
 	BubbleSort tmp;
 	bool isSorted = true;
 	for (int i = 0; i < static_cast<int>(matrix.size()); i++) {

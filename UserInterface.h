@@ -30,4 +30,4 @@ pair<string, pair<int, int>> SortWithCertainMethod(vector<vector<int>>& matrix, 
 
 vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& matrix, int mode, fstream& fout);
 
-bool isMatrixSorted(vector<vector<int>>& matrix);
+bool IsMatrixSorted(vector<vector<int>>& matrix);
