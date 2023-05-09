@@ -23,8 +23,8 @@ int iSort::GetComparisons()
 bool iSort::Compare(int x, int y, int mode)
 {
 	comparisons++;
-	if (mode == ComaparisonOptions::strict) return x >= y;
-	else return x > y;
+	if (mode == ComaparisonOptions::strict) return x > y;
+	else return x >= y;
 }
 
 //функция для перестановки двух элементов в векторе
@@ -35,26 +35,21 @@ void iSort::Permutate(vector<int>& a, int pos1, int pos2)
 }
 
 //проверка на отсортированность строки матрицы
-bool iSort::IsSorted(vector<int>& arr)
-{
-	if (arr.size() == 1) return true;
-	for (int i = 0; i < arr.size()-1; i++) {
-		if (abs(arr[i]) < abs(arr[i + 1])) return false;
-	}
-	return true;
-}
+//bool iSort::IsSorted(vector<int>& arr)
+//{
+//	if (arr.size() == 1) return true;
+//	for (int i = 0; i < arr.size()-1; i++) {
+//		if (abs(arr[i]) < abs(arr[i + 1])) return false;
+//	}
+//	return true;
+//}
 
 //отсортировать все строки матрицы
-bool iSort::SortMatrix(vector<vector<int>>& matrix)
+void iSort::SortMatrix(vector<vector<int>>& matrix)
 {
-	bool isSorted = true;
 	for (int i = 0; i < static_cast<int>(matrix.size()); i++) {
-		if (!IsSorted(matrix[i])) {
-			Sort(matrix[i]);
-			isSorted = false;
-		}
+		Sort(matrix[i]);
 	}
-	return isSorted;
 }
 
 

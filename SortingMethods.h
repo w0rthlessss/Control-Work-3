@@ -13,7 +13,7 @@ public:
 	virtual void Sort(vector<int>& arr) override {
 		for (int i = 0; i < static_cast<int>(arr.size()); i++) {
 			for (int j = 0; j < static_cast<int>(arr.size()) - 1; j++) {
-				if (!Compare(abs(arr[j]), abs(arr[j + int(1)]), ComaparisonOptions::nonStrict)) Permutate(arr, j, j + 1);
+				if (!Compare(abs(arr[j]), abs(arr[j + 1]), ComaparisonOptions::nonStrict)) Permutate(arr, j, j + 1);
 			}
 		}
 	}
@@ -32,7 +32,7 @@ public:
 		maxIndex = begin;
 		begin++;
 		for (begin; begin < arr.size(); begin++) {
-			if (Compare(abs(arr[begin]), abs(arr[maxIndex]), ComaparisonOptions::nonStrict)) {
+			if (Compare(abs(arr[begin]), abs(arr[maxIndex]), ComaparisonOptions::strict)) {
 				maxIndex = begin;
 			}
 		}
@@ -43,7 +43,7 @@ public:
 		for (int i = 0; i < static_cast<int>(arr.size()); i++) {
 			FindMaxIndex(arr, i, maxIndex);
 			if (i != maxIndex) {
-				comparisons++;
+				//comparisons++;
 				Permutate(arr, i, maxIndex);
 			}
 		}
@@ -85,7 +85,7 @@ public:
 		while (gap > 0) {
 			for (int i = 0; i < static_cast<int>(arr.size()) - gap; i++) {
 				int j = i;
-				while (j >= 0 && !Compare(abs(arr[j]), abs(arr[j + gap]), ComaparisonOptions::strict)) {
+				while (j >= 0 && !Compare(abs(arr[j]), abs(arr[j + gap]), ComaparisonOptions::nonStrict)) {
 					Permutate(arr, j, j + gap);
 					j--;
 				}
@@ -111,15 +111,15 @@ public:
 
 		for (int i = start; i < end; i++)
 		{
-			if (Compare(abs(arr[i]), abs(pivot), ComaparisonOptions::nonStrict))
+			if (Compare(abs(arr[i]), abs(pivot), ComaparisonOptions::strict))
 			{
 				Permutate(arr, i, pIndex);;
 				pIndex++;
 			}
 		}
 
-		
-		Permutate(arr, pIndex, end);
+		swap(arr[pIndex], arr[end]);
+		//Permutate(arr, pIndex, end);
 
 		return pIndex;
 	}

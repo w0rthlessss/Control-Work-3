@@ -9,7 +9,7 @@ void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom);
 
 void WorkWithFile(vector<vector<int>>& matrix);
 
-void CertainSort(vector<vector<int>>& matrix, int mode, fstream &fout);
+void CertainSort(vector<vector<int>>& matrix, fstream &fout);
 
 void Task();
 
@@ -25,9 +25,7 @@ void SubOptionsBottom();
 
 void IncorrectOption();
 
-template<class algorithm>
-pair<string, pair<int, int>> SortWithCertainMethod(vector<vector<int>>& matrix, int mode, fstream& fout, bool isOnly);
+pair<string, pair<int, int>> SortWithCertainMethod(std::shared_ptr<iSort> sort, vector<vector<int>>& matrix, fstream& fout, char ans);
 
-vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& matrix, int mode, fstream& fout);
+vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& matrix, fstream& fout, char ans);
 
-bool IsMatrixSorted(vector<vector<int>>& matrix);

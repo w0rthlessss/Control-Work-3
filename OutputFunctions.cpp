@@ -1,7 +1,7 @@
 #include "OutputFunctions.h"
 
 //вывод таблицы сравнения
-void GetResults(int mode, vector<pair<string, pair<int, int>>> results, fstream &fout, bool ask) {
+void GetResults(vector<pair<string, pair<int, int>>> results, fstream &fout, char ans) {
 	if (results.empty()) {
 		cout << "\nThere isn't anything to comare!\n\n";
 		return;
@@ -14,7 +14,7 @@ void GetResults(int mode, vector<pair<string, pair<int, int>>> results, fstream 
 	}
 	cout << endl;
 
-	if (mode == TopMenu::file || (ask && SaveResults("comparison table") == 'y')) {
+	if (ans  == 'y') {
 		if (!fout.is_open()) {
 			string name = OpenFile(WorkWithFiles::output, fout);
 		}
@@ -30,7 +30,7 @@ void GetResults(int mode, vector<pair<string, pair<int, int>>> results, fstream 
 }
 
 //вывод исходной либо отсортированной матрицы
-void PrintMatrix(vector<vector<int>>& matrix, int mode, string msg, fstream &fout, bool ask)
+void PrintMatrix(vector<vector<int>>& matrix, string msg, fstream &fout, char ans)
 {
 	cout << endl << msg << " matrix:\n\n";
 	for (auto i = 0; i < matrix.size(); i++) {
@@ -41,7 +41,7 @@ void PrintMatrix(vector<vector<int>>& matrix, int mode, string msg, fstream &fou
 	}
 	cout << '\n';
 
-	if (mode == TopMenu::file || (ask && SaveResults(msg)=='y')) {
+	if (ans=='y') {
 		if (!fout.is_open()) {
 			string name = OpenFile(WorkWithFiles::output, fout);
 		}
