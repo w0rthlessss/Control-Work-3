@@ -55,6 +55,7 @@ void ConsoleInput(vector<vector<int>>& matrix)
 	Task();
 	Fio();
 	InputOption(TopMenu::console);
+
 	cout << "Matrix " << h << "x" << w << endl << endl;
 	PrintCurrentMatrix(matrix, h - 1, w, w);
 	cout << endl << endl;
@@ -92,7 +93,7 @@ bool FileInput(vector<vector<int>>& matrix, fstream &fin, bool isForTest)
 		for (auto j = 0; j < matrixW; j++) {
 			fin >> tmp;
 			if (fin.fail()) {
-				cout << "Error! Invalid data in the file! Check matrix values!\n";
+				cout << "\nError! Invalid data in the file! Check matrix values!\n";
 				matrix.clear();
 				return false;
 			}

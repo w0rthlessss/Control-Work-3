@@ -18,7 +18,7 @@ public:
 	virtual string GetName() = 0;
 	bool Compare(int x, int y, int mode);
 	void Permutate(vector <int>& arr, int pos1, int pos2);
-	bool IsSorted(vector<int>& arr);
-	bool SortMatrix(vector<vector<int>>& matrix);
+	//bool IsSorted(vector<int>& arr);
+	void SortMatrix(vector<vector<int>>& matrix);
 };
 
