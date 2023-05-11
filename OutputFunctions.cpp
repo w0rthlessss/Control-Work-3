@@ -39,7 +39,7 @@ void PrintMatrix(vector<vector<int>>& matrix, string msg, fstream &fout, char an
 		}
 		cout << "\n";
 	}
-	cout << '\n';
+	//cout << '\n';
 
 	if (ans=='y') {
 		if (!fout.is_open()) {
@@ -53,7 +53,7 @@ void PrintMatrix(vector<vector<int>>& matrix, string msg, fstream &fout, char an
 			}
 			fout << "\n";
 		}
-		fout << '\n';
+		//fout << '\n';
 	}
 
 }
@@ -61,7 +61,7 @@ void PrintMatrix(vector<vector<int>>& matrix, string msg, fstream &fout, char an
 //предложить пользователю сохранить результат в файл
 char SaveResults(string msg)
 {
-	cout << "Do you want to save " << msg << " in the file ? (y / n)\n\n";
+	cout << "\nDo you want to save " << msg << " in the file ? (y / n)\n\n";
 	char res = 'n';
 	do {
 		res = GetChar(">>");

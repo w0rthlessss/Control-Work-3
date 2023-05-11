@@ -81,7 +81,7 @@ public:
 
 	virtual void Sort(vector<int>& arr) {
 
-		int gap = static_cast<int>(arr.size());
+		int gap = static_cast<int>(arr.size())/2;
 		while (gap > 0) {
 			for (int i = 0; i < static_cast<int>(arr.size()) - gap; i++) {
 				int j = i;
@@ -118,8 +118,8 @@ public:
 			}
 		}
 
-		swap(arr[pIndex], arr[end]);
-		//Permutate(arr, pIndex, end);
+		//swap(arr[pIndex], arr[end]);
+		Permutate(arr, pIndex, end);
 
 		return pIndex;
 	}
@@ -144,6 +144,4 @@ public:
 	virtual void Sort(vector<int>& arr) override {
 		QSort(arr, 0, static_cast<int>(arr.size()) - 1);
 	}
-
-
 };

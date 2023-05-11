@@ -144,7 +144,7 @@ void RandomInput(vector<vector<int>>& matrix)
 	system("cls");
 	Task();
 	Fio();
-	InputOption(TopMenu::console);
+	InputOption(TopMenu::random);
 	cout << "Matrix " << h << "x" << w << endl << endl;
 	PrintCurrentMatrix(matrix, h-1, w, w);
 	cout << endl << endl;

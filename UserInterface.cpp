@@ -25,6 +25,7 @@ void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom)
 	bool ask = true;
 	while (actionBottom != BottomMenu::back) {
 		char ans = SaveResults("future results");
+		if(ans == 'y') string name = OpenFile(WorkWithFiles::output, fout);
 		PrintMatrix(matrix, "Original", fout, ans);
 
 
@@ -43,7 +44,7 @@ void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom)
 			break;
 
 		case BottomMenu::certain:
-			CertainSort(matrix, fout);
+			CertainSort(matrix, fout, ans);
 			fout.close();
 			actionBottom = BottomMenu::back;
 			Continue();
@@ -78,6 +79,7 @@ void WorkWithFile(vector<vector<int>>& matrix)
 
 	while (actionBottom != back) {
 		char ans = SaveResults("future results");
+		if (ans == 'y') string name = OpenFile(WorkWithFiles::output, fout);
 		PrintMatrix(matrix, "Original", fout, ans);
 
 		OptionsBottom();
@@ -94,7 +96,7 @@ void WorkWithFile(vector<vector<int>>& matrix)
 			break;
 
 		case BottomMenu::certain:
-			CertainSort(matrix, fout);
+			CertainSort(matrix, fout, ans);
 			fout.close();
 			actionBottom = BottomMenu::back;
 			Continue();
@@ -113,13 +115,12 @@ void WorkWithFile(vector<vector<int>>& matrix)
 }
 
 //выбор метода сортировки
-void CertainSort(vector<vector<int>>& matrix, fstream &fout)
+void CertainSort(vector<vector<int>>& matrix, fstream &fout, char ans)
 {
 	vector<vector<int>> temporaryMatrix = matrix;
 	vector<pair<string, pair<int, int>>> res;
 	int actionSubBottom = 1;
 	set<int> used;
-	bool isOnly = true;
 	while (actionSubBottom != SubBottomMenu::backToBottom && actionSubBottom != SubBottomMenu::compare) {
 		SubOptionsBottom();
 		actionSubBottom = GetInt(">>");
@@ -131,7 +132,7 @@ void CertainSort(vector<vector<int>>& matrix, fstream &fout)
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<BubbleSort>(), temporaryMatrix, fout, isOnly));
+			res.push_back(SortWithCertainMethod(std::make_shared<BubbleSort>(), temporaryMatrix, fout, ans));
 			used.insert(actionSubBottom);
 			break;
 
@@ -141,7 +142,7 @@ void CertainSort(vector<vector<int>>& matrix, fstream &fout)
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<SelectionSort>(), temporaryMatrix, fout, isOnly));
+			res.push_back(SortWithCertainMethod(std::make_shared<SelectionSort>(), temporaryMatrix, fout, ans));
 			used.insert(actionSubBottom);
 			break;
 
@@ -151,7 +152,7 @@ void CertainSort(vector<vector<int>>& matrix, fstream &fout)
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<InsertionSort>(), temporaryMatrix,  fout, isOnly));
+			res.push_back(SortWithCertainMethod(std::make_shared<InsertionSort>(), temporaryMatrix,  fout, ans));
 			used.insert(actionSubBottom);
 			break;
 
@@ -161,7 +162,7 @@ void CertainSort(vector<vector<int>>& matrix, fstream &fout)
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<ShellSort>(), temporaryMatrix, fout, isOnly));
+			res.push_back(SortWithCertainMethod(std::make_shared<ShellSort>(), temporaryMatrix, fout, ans));
 			used.insert(actionSubBottom);
 			break;
 
@@ -171,12 +172,12 @@ void CertainSort(vector<vector<int>>& matrix, fstream &fout)
 				cout << "You have already used this sorting method!\n\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<QuickSort>(), temporaryMatrix, fout, isOnly));
+			res.push_back(SortWithCertainMethod(std::make_shared<QuickSort>(), temporaryMatrix, fout, ans));
 			used.insert(actionSubBottom);
 			break;
 
 		case SubBottomMenu::compare:
-			GetResults(res, fout, isOnly);
+			GetResults(res, fout, ans);
 			res.clear();
 			used.clear();
 			break;
@@ -290,13 +291,3 @@ vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& mat
 
 	return a;
 }
-
-//проверка на отсортированность матрицы
-//bool IsMatrixSorted(vector<vector<int>>& matrix) {
-//	BubbleSort tmp;
-//	bool isSorted = true;
-//	for (int i = 0; i < static_cast<int>(matrix.size()); i++) {
-//		if (!tmp.IsSorted(matrix[i])) return false;
-//	}
-//	return isSorted;
-//}
