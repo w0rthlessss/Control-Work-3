@@ -34,16 +34,6 @@ void iSort::Permutate(vector<int>& a, int pos1, int pos2)
 	swap(a[pos1], a[pos2]);
 }
 
-//проверка на отсортированность строки матрицы
-//bool iSort::IsSorted(vector<int>& arr)
-//{
-//	if (arr.size() == 1) return true;
-//	for (int i = 0; i < arr.size()-1; i++) {
-//		if (abs(arr[i]) < abs(arr[i + 1])) return false;
-//	}
-//	return true;
-//}
-
 //отсортировать все строки матрицы
 void iSort::SortMatrix(vector<vector<int>>& matrix)
 {

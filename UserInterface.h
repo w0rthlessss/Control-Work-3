@@ -9,7 +9,7 @@ void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom);
 
 void WorkWithFile(vector<vector<int>>& matrix);
 
-void CertainSort(vector<vector<int>>& matrix, fstream &fout);
+void CertainSort(vector<vector<int>>& matrix, fstream &fout, char ans);
 
 void Task();
 
