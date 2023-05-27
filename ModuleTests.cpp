@@ -15,6 +15,8 @@ bool Check(T a, T b, int h, int w, string msg) {
     return true;
 }
 
+const string fileName = "test_info.txt";
+
 bool Test1()
 {
     //проверка ввода размеров матрицы с файла
@@ -22,7 +24,7 @@ bool Test1()
 
     fstream fin;
     const int h = 3, w = 3;
-    const string fileName = "test_info.txt";
+    
     fin.open(fileName, ios::in);
 
     if (!fin) {
@@ -53,7 +55,6 @@ bool Test2()
 
     fstream fin;
     const int h = 3, w = 3;
-    const string fileName = "test_info.txt";
     fin.open(fileName, ios::in);
 
     if (!fin) {
@@ -124,6 +125,12 @@ bool Test5()
 
 void LaunchAllTests()
 {
+    fstream fout;
+    fout.open(fileName, ios::out);
+    fout << "3 3" << endl;
+    fout << "-21 79 -80\n89 -75 -72\n69 10 48";
+    fout.close();
+
     bool tests[5] = { Test1(), Test2(), Test3(), Test4(), Test5() };
     /*for (int i = 0; i < 5; i++) {
         if (!tests[i]) cout << "TEST#" << i + 1 << "\tFAILURE!\n\n";

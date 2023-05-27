@@ -11,11 +11,23 @@ public:
 	}
 
 	virtual void Sort(vector<int>& arr) override {
-		for (int i = 0; i < static_cast<int>(arr.size()); i++) {
-			for (int j = 0; j < static_cast<int>(arr.size()) - 1; j++) {
+		bool isSwaped = true;
+		int i = 0;
+		while(isSwaped){
+			isSwaped = false;
+			for (int j = 0; j < arr.size() - 1 - i; j++) {
+				if (Compare(abs(arr[j + 1]), abs(arr[j]), ComaparisonOptions::strict)) {
+					Permutate(arr, j, j + 1);
+					isSwaped = true;
+				}
+			}
+			i++;
+		}
+		/*for (int i = 0; i < static_cast<int>(arr.size()); i++) {
+			for (int j = 0; j < static_cast<int>(arr.size()) - 1 - i; j++) {
 				if (!Compare(abs(arr[j]), abs(arr[j + 1]), ComaparisonOptions::nonStrict)) Permutate(arr, j, j + 1);
 			}
-		}
+		}*/
 	}
 };
 
@@ -43,7 +55,6 @@ public:
 		for (int i = 0; i < static_cast<int>(arr.size()); i++) {
 			FindMaxIndex(arr, i, maxIndex);
 			if (i != maxIndex) {
-				//comparisons++;
 				Permutate(arr, i, maxIndex);
 			}
 		}
@@ -104,40 +115,21 @@ public:
 		return "Quick Sort";
 	}
 
-	int Partition(vector<int> &arr, int start, int end)
-	{
-		int pivot = arr[end];
-		int pIndex = start;
-
-		for (int i = start; i < end; i++)
-		{
-			if (Compare(abs(arr[i]), abs(pivot), ComaparisonOptions::strict))
-			{
-				Permutate(arr, i, pIndex);;
-				pIndex++;
+	void QSort(vector<int>& arr, int start, int end) {
+		int i = start, j = end, pivot = arr[(start + end)/2];
+		while (i <= j) {
+			while (Compare(abs(arr[i]), abs(pivot), ComaparisonOptions::strict)) i++;
+			while (Compare(abs(pivot), abs(arr[j]), ComaparisonOptions::strict)) j--;
+			if (i <= j) {
+				Permutate(arr, i, j);
+				i++;
+				j--;
 			}
 		}
 
-		//swap(arr[pIndex], arr[end]);
-		Permutate(arr, pIndex, end);
+		if (start < j) QSort(arr, start, j);
 
-		return pIndex;
-	}
-
-	void QSort(vector<int>& arr, int start, int end) {
-
-		if (start >= end) {
-			return;
-		}
-
-		int pivot = Partition(arr, start, end);
-
-		
-		QSort(arr, start, pivot - 1);
-
-
-		QSort(arr, pivot + 1, end);
-
+		if (i < end) QSort(arr, i, end);
 	}
 
 
