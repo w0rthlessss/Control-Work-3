@@ -1,25 +1,31 @@
 #include "OutputFunctions.h"
 
 //вывод таблицы сравнения
-void GetResults(vector<pair<string, pair<int, int>>> results, fstream &fout, char ans) {
+void GetResults(vector<pair<string, pair<int, int>>> results, vector<vector<vector<int>>> matrices) {
 	if (results.empty()) {
 		cout << "\nThere isn't anything to comare!\n\n";
 		return;
 	}
 
-	cout << "Sorting efficiency comparison:\n\n";
-	cout << "\tComparisons\tPermutations\n";
+	cout << "\n\nSorting efficiency comparison:\n\n";
+	cout << "\t\tComparisons\tPermutations\n";
 	for (int i = 0; i < static_cast<int>(results.size()); i++) {
-		cout << results[i].first << '\t' << results[i].second.first << '\t' << results[i].second.second << endl;
+		cout << results[i].first << '\t' << results[i].second.first << '\t' << '\t' << results[i].second.second << endl;
 	}
 	cout << endl;
 
-	if (ans  == 'y') {
-		if (!fout.is_open()) {
-			string name = OpenFile(WorkWithFiles::output, fout);
-		}
+	if (SaveResults("sorting results") == 'y') {
+		fstream fout;
+		string names[6] = { "Original", "Bubble sorted", "Selection sorted", "Insertion sorted", "Shell sorted", "Quick sorted" };
+		string name = OpenFile(WorkWithFiles::output, fout);
 		
-		fout << "\nSorting efficiency comparison:\n\n";
+		for (int i = 1; i < 6; i++) {
+			if (matrices[i] != matrices[0]) {
+				PrintMatrix(matrices[i], names[i], fout, TopMenu::file);
+			}
+		}
+
+		fout << "\n\nSorting efficiency comparison:\n\n";
 		fout << "\tComparisons\tPermutations\n";
 		for (int i = 0; i < static_cast<int>(results.size()); i++) {
 			fout << results[i].first << '\t' << results[i].second.first << '\t' << results[i].second.second << endl;
@@ -30,23 +36,26 @@ void GetResults(vector<pair<string, pair<int, int>>> results, fstream &fout, cha
 }
 
 //вывод исходной либо отсортированной матрицы
-void PrintMatrix(vector<vector<int>>& matrix, string msg, fstream &fout, char ans)
+void PrintMatrix(vector<vector<int>>& matrix, string msg, fstream &fout, int mode)
 {
-	cout << endl << msg << " matrix:\n\n";
-	for (auto i = 0; i < matrix.size(); i++) {
-		for (auto j = 0; j < matrix[i].size(); j++) {
-			cout << matrix[i][j] << '\t';
+	if (mode == TopMenu::console) {
+		cout << endl << msg << " matrix:\n\n";
+		for (auto i = 0; i < matrix.size(); i++) {
+			for (auto j = 0; j < matrix[i].size(); j++) {
+				cout << matrix[i][j] << '\t';
+			}
+			cout << "\n";
 		}
-		cout << "\n";
 	}
+	
 	//cout << '\n';
 
-	if (ans=='y') {
+	if (mode==TopMenu::file) {
 		if (!fout.is_open()) {
 			string name = OpenFile(WorkWithFiles::output, fout);
 		}
 
-		fout << msg << " matrix:\n\n";
+		fout << endl << msg << " matrix:\n\n";
 		for (auto i = 0; i < matrix.size(); i++) {
 			for (auto j = 0; j < matrix[i].size(); j++) {
 				fout << matrix[i][j] << ' ';
@@ -94,42 +103,40 @@ string OpenFile(int option, fstream& file)
 	error_code ec;
 	if (option == WorkWithFiles::input) {
 		do {
-			name = GetLink("\nEnter the name of file with data.\nExample: matrix.txt\n");
+			name = GetLink("\nEnter the name of file with data. Example: students.txt\n");
 			file.open(name, ios::in);
 			if (!file.is_open()) {
 				cout << "\nError opening file. Make sure, that file exists!\n";
 				continue;
 			}
 
-			else if (!is_regular_file(name, ec)) {
+			if (!is_regular_file(name, ec)) {
 				cout << "\nAdress contains forbidden value. Try another file path!\n";
 				continue;
 			}
-			else return name;
-
+			return name;
 		} while (true);
-		
+
 
 	}
 	else {
-			do {
-				name = GetLink("\nEnter the name of file where results will be stored.\nIf there is data in the file it will be overwritten.\nExample: filtered.txt\n");
+		do {
+			name = GetLink("\nEnter the name of file where results will be stored.\nExample: results.txt\n\n");
 
-				file.open(name, ios::out, ios::trunc);
+			if (exists(name)) {
+				if (SaveResults("\nFile exists. Do you want to overwrite current data in the file") == 'n') continue;
+			}
 
-				if (!file.is_open()) {
-					cout << "\nError opening file. Make sure, that file exists!\n";
-					continue;
-				}
+			file.open(name, ios::out | ios::trunc);
 
-				else if (!is_regular_file(name, ec)) {
-					cout << "\nAdress contains forbidden value. Try another file path!\n";
-					continue;
-				}
+			if (!is_regular_file(name, ec)) {
+				cout << "\nAdress contains forbidden value. Try another file path!\n";
+				continue;
+			}
 
-				else return name;
+			return name;
+		} while (true);
 
-			} while (true);
 	}
 		
 }

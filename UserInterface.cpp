@@ -2,6 +2,8 @@
 #include <set>
 #include "GetInfo.h"
 
+#define mtSize 6
+
 //функция очищающая консоль для повторной работы программы
 void Continue()
 {
@@ -18,16 +20,14 @@ void Continue()
 void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom)
 {
 	fstream fout;
-	vector<vector<int>> temporaryMatrix;
+	vector<vector<vector<int>>> matrices;
 	int actionBottom = 1;
 	if (isRandom) RandomInput(matrix);
 	else ConsoleInput(matrix);
-	bool ask = true;
+	matrices.assign(mtSize, matrix);
+	vector<pair<string, pair<int, int>>> results;
 	while (actionBottom != BottomMenu::back) {
-		char ans = SaveResults("future results");
-		if(ans == 'y') string name = OpenFile(WorkWithFiles::output, fout);
-		PrintMatrix(matrix, "Original", fout, ans);
-
+		PrintMatrix(matrix, "Original", fout, TopMenu::console);
 
 		OptionsBottom();
 		actionBottom = GetInt(">>");
@@ -36,15 +36,15 @@ void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom)
 		switch (actionBottom)
 		{
 		case BottomMenu::all:
-			temporaryMatrix = matrix;
-			GetResults(SortWithAllMethods(temporaryMatrix, fout, ans), fout, false);
+			results = SortWithAllMethods(matrices, fout);
+			GetResults(results, matrices);
 			fout.close();
 			actionBottom = BottomMenu::back;
 			Continue();
 			break;
 
 		case BottomMenu::certain:
-			CertainSort(matrix, fout, ans);
+			CertainSort(matrices, fout);
 			fout.close();
 			actionBottom = BottomMenu::back;
 			Continue();
@@ -59,14 +59,13 @@ void WorkWithConsole(vector<vector<int>>& matrix, bool isRandom)
 			IncorrectOption();
 			break;
 		}
-		ask = false;
 	}
 }
 
 //чтение данных из файла и работа с ними
 void WorkWithFile(vector<vector<int>>& matrix)
 {
-	vector<vector<int>> temporaryMatrix;
+	vector<vector<vector<int>>> matrices;
 	int actionBottom = 1;
 	fstream fin;
 	fstream fout;
@@ -77,10 +76,11 @@ void WorkWithFile(vector<vector<int>>& matrix)
 		fin.close();
 	} while (!isCorrect);
 
+	matrices.assign(mtSize, matrix);
+	vector<pair<string, pair<int, int>>> results;
+
 	while (actionBottom != back) {
-		char ans = SaveResults("future results");
-		if (ans == 'y') string name = OpenFile(WorkWithFiles::output, fout);
-		PrintMatrix(matrix, "Original", fout, ans);
+		PrintMatrix(matrix, "Original", fout, TopMenu::console);
 
 		OptionsBottom();
 		actionBottom = GetInt(">>");
@@ -88,15 +88,15 @@ void WorkWithFile(vector<vector<int>>& matrix)
 		switch (actionBottom)
 		{
 		case BottomMenu::all:
-			temporaryMatrix = matrix;
-			GetResults(SortWithAllMethods(temporaryMatrix, fout, ans), fout, false);
+			results = SortWithAllMethods(matrices, fout);
+			GetResults(results, matrices);
 			fout.close();
 			actionBottom = BottomMenu::back;
 			Continue();
 			break;
 
 		case BottomMenu::certain:
-			CertainSort(matrix, fout, ans);
+			CertainSort(matrices, fout);
 			fout.close();
 			actionBottom = BottomMenu::back;
 			Continue();
@@ -115,9 +115,8 @@ void WorkWithFile(vector<vector<int>>& matrix)
 }
 
 //выбор метода сортировки
-void CertainSort(vector<vector<int>>& matrix, fstream &fout, char ans)
+void CertainSort(vector<vector<vector<int>>>& matrices, fstream &fout)
 {
-	vector<vector<int>> temporaryMatrix = matrix;
 	vector<pair<string, pair<int, int>>> res;
 	int actionSubBottom = 1;
 	set<int> used;
@@ -127,57 +126,52 @@ void CertainSort(vector<vector<int>>& matrix, fstream &fout, char ans)
 		switch (actionSubBottom)
 		{
 		case SubBottomMenu::bubble:
-			temporaryMatrix = matrix;
 			if (used.find(actionSubBottom) != used.end()) {
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<BubbleSort>(), temporaryMatrix, fout, ans));
+			res.push_back(SortWithCertainMethod(std::make_shared<BubbleSort>(), matrices[1], fout));
 			used.insert(actionSubBottom);
 			break;
 
 		case SubBottomMenu::selection:
-			temporaryMatrix = matrix;
 			if (used.find(actionSubBottom) != used.end()) {
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<SelectionSort>(), temporaryMatrix, fout, ans));
+			res.push_back(SortWithCertainMethod(std::make_shared<SelectionSort>(), matrices[2], fout));
 			used.insert(actionSubBottom);
 			break;
 
 		case SubBottomMenu::insertion:
-			temporaryMatrix = matrix;
 			if (used.find(actionSubBottom) != used.end()) {
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<InsertionSort>(), temporaryMatrix,  fout, ans));
+			res.push_back(SortWithCertainMethod(std::make_shared<InsertionSort>(), matrices[3], fout));
 			used.insert(actionSubBottom);
 			break;
 
 		case SubBottomMenu::shell:
-			temporaryMatrix = matrix;
 			if (used.find(actionSubBottom) != used.end()) {
 				cout << "You have already used this sorting method!\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<ShellSort>(), temporaryMatrix, fout, ans));
+			res.push_back(SortWithCertainMethod(std::make_shared<ShellSort>(), matrices[4], fout));
 			used.insert(actionSubBottom);
 			break;
 
 		case SubBottomMenu::quick:
-			temporaryMatrix = matrix;
 			if (used.find(actionSubBottom) != used.end()) {
 				cout << "You have already used this sorting method!\n\n";
 				break;
 			}
-			res.push_back(SortWithCertainMethod(std::make_shared<QuickSort>(), temporaryMatrix, fout, ans));
+			res.push_back(SortWithCertainMethod(std::make_shared<QuickSort>(), matrices[5], fout));
 			used.insert(actionSubBottom);
 			break;
 
 		case SubBottomMenu::compare:
-			GetResults(res, fout, ans);
+			GetResults(res, matrices);
 			res.clear();
 			used.clear();
 			break;
@@ -199,8 +193,8 @@ void CertainSort(vector<vector<int>>& matrix, fstream &fout, char ans)
 void Task()
 {
 	cout << "Make a program for sorting data using methods of: \"Bubble Sort\", \"Selection Sort\", \"Insertion Sort\", \"Shell Sort\" and \"Quick Sort\".\n";
-	cout << "Print unsorted matrix (once) and sorted matrixes (for each method). And create a comparison table.\n";
-	cout << "Matrix must be sorted in descending absoulute values in each line\n";
+	cout << "Print unsorted matrix (once) and sorted matrixes (for each method). Create a comparison table.\n";
+	cout << "Matrix must be sorted in descending absoulute values in each line.\n";
 	cout << "Matrix may be filled from console, file or using random values.\n";
 	cout << "Create abstract class \"iSort\" containing pure virtual method Sort, wich will be inherited by subclasses of sorting methods.\n\n";
 }
@@ -258,36 +252,26 @@ void IncorrectOption()
 }
 
 //использовать определённую сортировку
-pair<string, pair<int, int>> SortWithCertainMethod(std::shared_ptr<iSort> sort, vector<vector<int>>& matrix, fstream& fout, char ans) {
+pair<string, pair<int, int>> SortWithCertainMethod(shared_ptr<iSort> sort, vector<vector<int>>& matrix, fstream& fout) {
 	//algorithm sort;
 	sort->SortMatrix(matrix);
-	PrintMatrix(matrix, sort->GetName() + "ed", fout, ans);
+	PrintMatrix(matrix, sort->GetName() + "ed", fout, TopMenu::console);
 	return make_pair(sort->GetName(), make_pair(sort->GetComparisons(), sort->GetPermutations()));
 }
 
 //использовать все сортировки
-vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<int>>& matrix, fstream& fout, char ans) {
+vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<vector<int>>>& matrices, fstream& fout) {
 	vector<pair<string, pair<int, int>>> a;
-	vector<vector<int>> tmpMatrix;
 
-	if (ans=='y' && !fout.is_open()) {
-		string name = OpenFile(WorkWithFiles::output, fout);
-	}
+	a.push_back(SortWithCertainMethod(make_shared<BubbleSort>(), matrices[1], fout));
 
-	tmpMatrix = matrix;
-	a.push_back(SortWithCertainMethod(std::make_shared<BubbleSort>(), tmpMatrix, fout, ans));
+	a.push_back(SortWithCertainMethod(make_shared<SelectionSort>(), matrices[2], fout));
 
-	tmpMatrix = matrix;
-	a.push_back(SortWithCertainMethod(std::make_shared<SelectionSort>(), tmpMatrix, fout, ans));
+	a.push_back(SortWithCertainMethod(make_shared<InsertionSort>(), matrices[3], fout));
 
-	tmpMatrix = matrix;
-	a.push_back(SortWithCertainMethod(std::make_shared<InsertionSort>(), tmpMatrix, fout, ans));
+	a.push_back(SortWithCertainMethod(make_shared<ShellSort>(), matrices[4], fout));
 
-	tmpMatrix = matrix;
-	a.push_back(SortWithCertainMethod(std::make_shared<ShellSort>(), tmpMatrix, fout, ans));
-
-	tmpMatrix = matrix;
-	a.push_back(SortWithCertainMethod(std::make_shared<QuickSort>(), tmpMatrix, fout, ans));
+	a.push_back(SortWithCertainMethod(make_shared<QuickSort>(), matrices[5], fout));
 
 	return a;
 }
