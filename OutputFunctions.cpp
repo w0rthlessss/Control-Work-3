@@ -7,10 +7,10 @@ void GetResults(vector<pair<string, pair<int, int>>> results, vector<vector<vect
 		return;
 	}
 
-	cout << "\nSorting efficiency comparison:\n\n";
-	cout << "\tComparisons\tPermutations\n";
+	cout << "\n\nSorting efficiency comparison:\n\n";
+	cout << "\t\tComparisons\tPermutations\n";
 	for (int i = 0; i < static_cast<int>(results.size()); i++) {
-		cout << results[i].first << '\t' << results[i].second.first << '\t' << results[i].second.second << endl;
+		cout << results[i].first << '\t' << results[i].second.first << '\t' << '\t' << results[i].second.second << endl;
 	}
 	cout << endl;
 

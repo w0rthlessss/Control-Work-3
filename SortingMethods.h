@@ -72,11 +72,28 @@ public:
 
 	virtual void Sort(vector<int>& arr) {
 		for (int i = 1; i < static_cast<int>(arr.size()); i++) {
-			for (int j = i; j > 0; j--) {
-				if (!Compare(abs(arr[j - 1]), abs(arr[j]), ComaparisonOptions::nonStrict)) {
-					Permutate(arr, j - 1, j);
+			int j = i - 1;
+			int elem = arr[i];
+			int comps = GetComparisons();
+			int loc = [&comps](vector<int> arr, int elem, int low, int high) {
+				while (low <= high) {
+					int mid = low + (high - low) / 2;
+					comps++;
+					if (abs(elem) == abs(arr[mid])) return mid + 1;
+					else if (abs(elem) > abs(arr[mid])) high = mid - 1;
+					else low = mid + 1;
 				}
+			return low; }(arr, elem, 0, j);
+			comparisons = comps;
+
+			if(abs(elem) >= abs(arr[j])) continue;
+
+			while (j >= loc) {
+				arr[j + 1] = arr[j];
+				j--;
+				permutations++;
 			}
+			arr[j + 1] = elem;
 		}
 	}
 };
@@ -115,8 +132,30 @@ public:
 		return "Quick Sort";
 	}
 
-	void QSort(vector<int>& arr, int start, int end) {
-		int i = start, j = end, pivot = arr[(start + end)/2];
+	/*int Partition(vector<int>& arr, int low, int high) {
+		int pivot = abs(arr[high]);
+		int i = low - 1;
+
+		for (int j = low; j < high; j++) {
+			if (Compare(abs(arr[j]), pivot, ComaparisonOptions::nonStrict)) {
+				i++;
+				Permutate(arr, i, j);
+			}
+		}
+
+		Permutate(arr, i + 1, high);
+		return i + 1;
+	}*/
+
+	void QSort(vector<int>& arr, int low, int high) {
+		/*if (low < high) {
+			int pIndex = Partition(arr, low, high);
+
+			QSort(arr, low, pIndex - 1);
+
+			QSort(arr, pIndex + 1, high);
+		}*/
+		int i = low, j = high, pivot = arr[(low + high)/2];
 		while (i <= j) {
 			while (Compare(abs(arr[i]), abs(pivot), ComaparisonOptions::strict)) i++;
 			while (Compare(abs(pivot), abs(arr[j]), ComaparisonOptions::strict)) j--;
@@ -127,9 +166,9 @@ public:
 			}
 		}
 
-		if (start < j) QSort(arr, start, j);
+		if (low < j) QSort(arr, low, j);
 
-		if (i < end) QSort(arr, i, end);
+		if (i < high) QSort(arr, i, high);
 	}
 
 
