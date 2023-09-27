@@ -132,9 +132,6 @@ void LaunchAllTests()
     fout.close();
 
     bool tests[5] = { Test1(), Test2(), Test3(), Test4(), Test5() };
-    /*for (int i = 0; i < 5; i++) {
-        if (!tests[i]) cout << "TEST#" << i + 1 << "\tFAILURE!\n\n";
-    }*/
 
     if (tests[0] && tests[1] && tests[2] && tests[3] && tests[4]) cout << "\nAll tests SUCCEDED!\n\n";
 }

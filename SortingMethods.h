@@ -23,11 +23,6 @@ public:
 			}
 			i++;
 		}
-		/*for (int i = 0; i < static_cast<int>(arr.size()); i++) {
-			for (int j = 0; j < static_cast<int>(arr.size()) - 1 - i; j++) {
-				if (!Compare(abs(arr[j]), abs(arr[j + 1]), ComaparisonOptions::nonStrict)) Permutate(arr, j, j + 1);
-			}
-		}*/
 	}
 };
 
@@ -76,24 +71,21 @@ public:
 			int elem = arr[i];
 			int comps = GetComparisons();
 			int loc = [&comps](vector<int> arr, int elem, int low, int high) {
+
 				while (low <= high) {
 					int mid = low + (high - low) / 2;
 					comps++;
-					if (abs(elem) == abs(arr[mid])) return mid + 1;
-					else if (abs(elem) > abs(arr[mid])) high = mid - 1;
-					else low = mid + 1;
+					if (abs(elem) == abs(arr[mid])) return mid;
+					else if (abs(elem) < abs(arr[mid])) low = mid + 1;
+					else high = mid - 1;
 				}
-			return low; }(arr, elem, 0, j);
+				return low; 
+			}(arr, elem, 0, j);
 			comparisons = comps;
 
-			if(abs(elem) >= abs(arr[j])) continue;
-
-			while (j >= loc) {
-				arr[j + 1] = arr[j];
-				j--;
-				permutations++;
+			for (int k = i; k > loc; k--) {
+				Permutate(arr, k, k - 1);
 			}
-			arr[j + 1] = elem;
 		}
 	}
 };
@@ -116,6 +108,10 @@ public:
 				while (j >= 0 && !Compare(abs(arr[j]), abs(arr[j + gap]), ComaparisonOptions::nonStrict)) {
 					Permutate(arr, j, j + gap);
 					j--;
+					/*for (int k = 0; k < arr.size(); k++) {
+						cout << arr[k] << ' ';
+					}
+					cout << '\n';*/
 				}
 			}
 			gap /= 2;
@@ -132,29 +128,7 @@ public:
 		return "Quick Sort";
 	}
 
-	/*int Partition(vector<int>& arr, int low, int high) {
-		int pivot = abs(arr[high]);
-		int i = low - 1;
-
-		for (int j = low; j < high; j++) {
-			if (Compare(abs(arr[j]), pivot, ComaparisonOptions::nonStrict)) {
-				i++;
-				Permutate(arr, i, j);
-			}
-		}
-
-		Permutate(arr, i + 1, high);
-		return i + 1;
-	}*/
-
 	void QSort(vector<int>& arr, int low, int high) {
-		/*if (low < high) {
-			int pIndex = Partition(arr, low, high);
-
-			QSort(arr, low, pIndex - 1);
-
-			QSort(arr, pIndex + 1, high);
-		}*/
 		int i = low, j = high, pivot = arr[(low + high)/2];
 		while (i <= j) {
 			while (Compare(abs(arr[i]), abs(pivot), ComaparisonOptions::strict)) i++;

@@ -1,5 +1,6 @@
 #include "OutputFunctions.h"
-
+#include <io.h>
+#include <cerrno>
 //вывод таблицы сравнения
 void GetResults(vector<pair<string, pair<int, int>>> results, vector<vector<vector<int>>> matrices) {
 	if (results.empty()) {
@@ -14,7 +15,7 @@ void GetResults(vector<pair<string, pair<int, int>>> results, vector<vector<vect
 	}
 	cout << endl;
 
-	if (SaveResults("sorting results") == 'y') {
+	if (SaveResults("Do you want to save sorting results in the file?") == 'y') {
 		fstream fout;
 		string names[6] = { "Original", "Bubble sorted", "Selection sorted", "Insertion sorted", "Shell sorted", "Quick sorted" };
 		string name = OpenFile(WorkWithFiles::output, fout);
@@ -70,7 +71,7 @@ void PrintMatrix(vector<vector<int>>& matrix, string msg, fstream &fout, int mod
 //предложить пользователю сохранить результат в файл
 char SaveResults(string msg)
 {
-	cout << "\nDo you want to save " << msg << " in the file ? (y / n)\n\n";
+	cout << "\n" << msg << " (y / n)\n\n";
 	char res = 'n';
 	do {
 		res = GetChar(">>");
@@ -96,24 +97,31 @@ void SaveConsoleData(fstream& fout, vector<vector<int>> matrix)
 	fout.close();
 }
 
+
 //открытие файла для чтения или записи
 string OpenFile(int option, fstream& file)
 {
 	string name = "";
-	error_code ec;
+
 	if (option == WorkWithFiles::input) {
 		do {
 			name = GetLink("\nEnter the name of file with data. Example: students.txt\n");
-			file.open(name, ios::in);
-			if (!file.is_open()) {
-				cout << "\nError opening file. Make sure, that file exists!\n";
-				continue;
+			
+			if (_access(name.c_str(), 0) == 0) {
+				file.open(name.c_str(), ios::in);
 			}
+			else {
+				if (errno == ENOENT) {
+					cout << "\nError opening file. Make sure, that file exists!\n";
+					continue;
+				}
+				else {
+					cout << "\nAdress contains forbidden value!\n";
+					continue;
+				}
+			}
+			
 
-			if (!is_regular_file(name, ec)) {
-				cout << "\nAdress contains forbidden value. Try another file path!\n";
-				continue;
-			}
 			return name;
 		} while (true);
 
@@ -122,16 +130,23 @@ string OpenFile(int option, fstream& file)
 	else {
 		do {
 			name = GetLink("\nEnter the name of file where results will be stored.\nExample: results.txt\n\n");
+			
+			if (_access(name.c_str(), 0) == 0) {
 
-			if (exists(name)) {
-				if (SaveResults("\nFile exists. Do you want to overwrite current data in the file") == 'n') continue;
+				if (exists(name)) {
+					if (SaveResults("\nFile exists. Do you want to overwrite current data in the file") == 'n') continue;
+				}
+
+				file.open(name.c_str(), ios::out);
 			}
-
-			file.open(name, ios::out | ios::trunc);
-
-			if (!is_regular_file(name, ec)) {
-				cout << "\nAdress contains forbidden value. Try another file path!\n";
-				continue;
+			else {
+				if (errno == ENOENT) {
+					file.open(name.c_str(), ios::out);
+				}
+				else {
+					cout << "\nAdress contains forbidden value!\n";
+					continue;
+				}
 			}
 
 			return name;

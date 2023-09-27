@@ -60,7 +60,7 @@ void ConsoleInput(vector<vector<int>>& matrix)
 	PrintCurrentMatrix(matrix, h - 1, w, w);
 	cout << endl << endl;
 
-	if (SaveResults("matrix data")=='y') {
+	if (SaveResults("Do you want to save matrix data in the file? ")=='y') {
 		SaveConsoleData(fout, matrix);
 	}
 		
@@ -148,7 +148,7 @@ void RandomInput(vector<vector<int>>& matrix)
 	cout << "Matrix " << h << "x" << w << endl << endl;
 	PrintCurrentMatrix(matrix, h-1, w, w);
 	cout << endl << endl;
-	if (SaveResults("matrix data")=='y') {
+	if (SaveResults("Do you want to save matrix data in the file? ")=='y') {
 		SaveConsoleData(fout, matrix);
 	}
 }
