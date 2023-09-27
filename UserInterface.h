@@ -25,7 +25,7 @@ void SubOptionsBottom();
 
 void IncorrectOption();
 
-pair<string, pair<int, int>> SortWithCertainMethod(std::shared_ptr<iSort> sort, vector<vector<int>>& matrix, fstream& fout);
+pair<string, pair<int, int>> SortWithCertainMethod(shared_ptr<iSort> sort, vector<vector<int>>& matrix, fstream& fout);
 
 vector<pair<string, pair<int, int>>> SortWithAllMethods(vector<vector<vector<int>>>& matrices, fstream& fout);
 

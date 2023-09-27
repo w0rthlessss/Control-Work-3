@@ -6,6 +6,8 @@
 
 using namespace filesystem;
 
+bool isForbiddenName(string name);
+
 string OpenFile(int option, fstream& file);
 
 void GetResults(vector<pair<string, pair<int, int>>> results, vector<vector<vector<int>>> matrices);
